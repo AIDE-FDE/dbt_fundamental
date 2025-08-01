@@ -1,0 +1,42 @@
+version: 2
+
+sources:
+  - name: jaffle_shop
+    description: A clone of a Postgres application database.
+    database: raw
+    schema: jaffle_shop
+    freshness: 
+      error_after:
+        count: 10
+        period: day
+      warn_after:
+        count: 3
+        period: day
+    loaded_at_field: "convert_timezone('UTC', _etl_loaded_at)"
+    tables:
+      - name: customers
+        description: Raw customers data.
+        freshness: null
+        columns:
+          - name: id
+            description: Primary key for customers.
+            tests:
+              - not_null
+              - unique
+      - name: orders
+        description: Raw orders data.
+        columns:
+          - name: id
+            description: Primary key for orders.
+            tests:
+              - unique
+              - not_null
+        # freshness: 
+        #   error_after:
+        #     count: 3
+        #     period: day
+        #   warn_after:
+        #     count: 2
+        #     period: day
+        # loaded_at_field: "convert_timezone('UTC', _etl_loaded_at)"
+      
